@@ -14,11 +14,20 @@ services:
     volumes:
       - ./api:/app
   
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 8080:3000
+    volumes:
+      - ./grafana:/var/lib/grafana
+      - ./nginx:/var/log/nginx
+  
   nginx:
     image: nginx:latest
     ports:
       - 3000:80
     volumes:
       - ./nginx.api.conf:/etc/nginx/nginx.conf
+      - ./nginx:/var/log/nginx
     depends_on:
       - api
