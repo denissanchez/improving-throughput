@@ -1,0 +1,24 @@
+services:
+  db:
+    image: bitnami/postgresql:16.3.0
+    volumes:
+      - ./data:/bitnami/postgresql
+    environment:
+      - POSTGRESQL_DATABASE=plant_modeler
+      - POSTGRESQL_POSTGRES_PASSWORD=Piper@2024
+  
+  api:
+    image: desanchezca/api:1.0
+    build: ./api
+    command: sh -c "pm2 start npm --name api -i 1 -- start && pm2 logs"
+    volumes:
+      - ./api:/app
+  
+  nginx:
+    image: nginx:latest
+    ports:
+      - 3000:80
+    volumes:
+      - ./nginx.api.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - api
